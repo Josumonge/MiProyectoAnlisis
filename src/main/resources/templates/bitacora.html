@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{layout :: head}"></th:block>
+    <title>Bitácora - PubRock</title>
+</head>
+<body>
+
+    <div th:replace="~{layout :: topbar}"></div>
+
+    <div class="d-flex">
+        <div th:replace="~{layout :: sidebar}"></div>
+
+        <main class="main-content flex-grow-1 p-4">
+            <div class="container-fluid">
+
+                <!-- Encabezado -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="display-6 fw-bold font-oswald">Bitácora del Sistema</h2>
+                </div>
+
+                <!-- Tarjetas resumen -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Total Registros</small>
+                            <h3 class="mb-0 font-oswald" th:text="${bitacora.length}">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Módulos Registrados</small>
+                            <h3 class="mb-0 font-oswald">5</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Usuarios Activos</small>
+                            <h3 class="mb-0 font-oswald">3</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Última Acción</small>
+                            <h3 class="mb-0 font-oswald">Hoy</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="card card-pubrock shadow p-3 mb-4">
+                    <div class="row g-2 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Usuario</label>
+                            <input type="text" class="form-control" placeholder="Buscar usuario">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Módulo</label>
+                            <select class="form-select">
+                                <option>Todos</option>
+                                <option>Inventario</option>
+                                <option>Usuarios</option>
+                                <option>Ventas</option>
+                                <option>Reservaciones</option>
+                                <option>Contabilidad</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Acción</label>
+                            <select class="form-select">
+                                <option>Todas</option>
+                                <option>CREAR</option>
+                                <option>EDITAR</option>
+                                <option>ELIMINAR</option>
+                                <option>ANULAR</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <button class="btn btn-pubrock w-100 shadow">
+                                <i class="bi bi-funnel-fill"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla -->
+                <div class="card card-pubrock shadow p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">ID</th>
+                                    <th>Usuario</th>
+                                    <th>Módulo</th>
+                                    <th>Acción</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha</th>
+                                    <th class="pe-4">Hora</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="b : ${bitacora}">
+                                    <td class="ps-4 text-muted" th:text="${b[0]}">1</td>
+
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="avatar-circle"
+                                                 th:text="${#strings.substring(b[1],0,1)}">K</div>
+                                            <span class="fw-semibold" th:text="${b[1]}">Kevin</span>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge rounded-pill bg-dark px-3 shadow-sm"
+                                              th:text="${b[2]}">Inventario</span>
+                                    </td>
+
+                                    <td>
+                                        <span th:if="${b[3] == 'CREAR'}"
+                                              class="badge rounded-pill bg-success px-3 shadow-sm">CREAR</span>
+
+                                        <span th:if="${b[3] == 'EDITAR'}"
+                                              class="badge rounded-pill bg-warning text-dark px-3 shadow-sm">EDITAR</span>
+
+                                        <span th:if="${b[3] == 'ELIMINAR'}"
+                                              class="badge rounded-pill bg-danger px-3 shadow-sm">ELIMINAR</span>
+
+                                        <span th:if="${b[3] == 'ANULAR'}"
+                                              class="badge rounded-pill px-3 shadow-sm"
+                                              style="background-color:#EA9999; color:#121212;">ANULAR</span>
+                                    </td>
+
+                                    <td th:text="${b[4]}">Se agregó producto</td>
+                                    <td th:text="${b[5]}">2026-04-08</td>
+                                    <td class="pe-4" th:text="${b[6]}">10:30 AM</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

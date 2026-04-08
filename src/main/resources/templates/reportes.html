@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{layout :: head}"></th:block>
+    <title>Reportes - PubRock System</title>
+</head>
+<body>
+
+    <div th:replace="~{layout :: topbar}"></div>
+
+    <div class="layout d-flex">
+        <div th:replace="~{layout :: sidebar}"></div>
+
+        <main class="main-content">
+            <div class="container-fluid">
+
+                <div class="row mb-4">
+                    <div class="col">
+                        <h2 class="display-6 fw-bold">Generación de Reportes</h2>
+                        <p class="text-muted small text-uppercase">Consulta, análisis y exportación de información del sistema</p>
+                    </div>
+                </div>
+
+                <!-- FILTROS -->
+                <div class="card card-pubrock p-4 mb-4">
+                    <h4 class="oswald-font mb-3" style="color: var(--acento)">Filtros del Reporte</h4>
+
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label small text-uppercase fw-bold">Desde</label>
+                            <input type="date" class="form-control bg-dark border-secondary text-white">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label small text-uppercase fw-bold">Hasta</label>
+                            <input type="date" class="form-control bg-dark border-secondary text-white">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label small text-uppercase fw-bold">Tipo de Reporte</label>
+                            <select class="form-select bg-dark border-secondary text-white">
+                                <option>Ventas Diarias</option>
+                                <option>Productos Más Vendidos</option>
+                                <option>Inventario / Mermas</option>
+                                <option>Rendimiento por Empleado</option>
+                                <option>Incidencias por Usuario</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label small text-uppercase fw-bold">Categoría / Filtro</label>
+                            <select class="form-select bg-dark border-secondary text-white">
+                                <option>Todas</option>
+                                <option>Licores</option>
+                                <option>Comidas</option>
+                                <option>Bebidas</option>
+                                <option>Mermas</option>
+                                <option>Alertas de Inventario</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12 d-flex gap-2 flex-wrap">
+                            <button class="btn btn-pubrock px-4"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalGenerarReporte">
+                                <i class="bi bi-bar-chart-line me-2"></i>Generar Reporte
+                            </button>
+
+                            <button class="btn btn-outline-light px-4"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalExportarPDF">
+                                <i class="bi bi-file-earmark-pdf me-2"></i>Descargar PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TARJETAS RESUMEN -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="card card-stat h-100 p-4 text-center">
+                            <i class="bi bi-cash-stack fs-1 text-acento mb-2"></i>
+                            <h5>Ventas del Día</h5>
+                            <p class="small text-muted mb-1">Monto total recaudado</p>
+                            <h4 th:text="|₡${montoTotal}|">₡0.00</h4>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-stat h-100 p-4 text-center">
+                            <i class="bi bi-graph-up-arrow fs-1 text-acento mb-2"></i>
+                            <h5>Top Productos</h5>
+                            <p class="small text-muted mb-1">Mayor volumen de salida</p>
+                            <h4>Top 10</h4>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-stat h-100 p-4 text-center">
+                            <i class="bi bi-exclamation-triangle fs-1 text-acento mb-2"></i>
+                            <h5>Inventario</h5>
+                            <p class="small text-muted mb-1">Alertas y mermas</p>
+                            <h4>3 alertas</h4>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card card-stat h-100 p-4 text-center">
+                            <i class="bi bi-people fs-1 text-acento mb-2"></i>
+                            <h5>Rendimiento</h5>
+                            <p class="small text-muted mb-1">Por empleado</p>
+                            <h4>3 empleados</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REPORTE DE VENTAS -->
+                <div class="card card-pubrock p-0 mb-4">
+                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 p-3">
+                        <h5 class="mb-0">Reporte de Ventas Diarias</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0 align-middle">
+                            <thead class="oswald-font" style="background-color: rgba(0,0,0,0.2);">
+                                <tr>
+                                    <th class="ps-4 py-3 border-0">Fecha</th>
+                                    <th class="py-3 border-0">Método de Pago</th>
+                                    <th class="pe-4 py-3 border-0 text-end">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="v : ${resumenVentas}">
+                                    <td class="ps-4" th:text="${v[0]}">2026-04-07</td>
+                                    <td th:text="${v[1]}">Efectivo</td>
+                                    <td class="pe-4 text-end" th:text="|₡${v[2]}|">₡0.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PRODUCTOS MÁS VENDIDOS -->
+                <div class="card card-pubrock p-0 mb-4">
+                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 p-3">
+                        <h5 class="mb-0">Productos Más Vendidos</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0 align-middle">
+                            <thead class="oswald-font" style="background-color: rgba(0,0,0,0.2);">
+                                <tr>
+                                    <th class="ps-4 py-3 border-0">Producto</th>
+                                    <th class="py-3 border-0">Categoría</th>
+                                    <th class="pe-4 py-3 border-0 text-end">Cantidad Vendida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p : ${productosTop}">
+                                    <td class="ps-4 fw-bold" th:text="${p[0]}">Producto</td>
+                                    <td th:text="${p[1]}">Categoría</td>
+                                    <td class="pe-4 text-end" th:text="${p[2]}">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- INVENTARIO / MERMAS -->
+                <div class="card card-pubrock p-0 mb-4">
+                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 p-3">
+                        <h5 class="mb-0">Reporte de Inventario y Pérdidas</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0 align-middle">
+                            <thead class="oswald-font" style="background-color: rgba(0,0,0,0.2);">
+                                <tr>
+                                    <th class="ps-4 py-3 border-0">Producto / Insumo</th>
+                                    <th class="py-3 border-0 text-center">Cantidad</th>
+                                    <th class="pe-4 py-3 border-0 text-end">Motivo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="i : ${inventarioAlertas}">
+                                    <td class="ps-4 fw-bold" th:text="${i[0]}">Producto</td>
+                                    <td class="text-center">
+                                        <span th:if="${i[1] <= 5}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#DC3545; color:white;"
+                                              th:text="${i[1]}">0</span>
+
+                                        <span th:if="${i[1] > 5}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#FFC107; color:#121212;"
+                                              th:text="${i[1]}">0</span>
+                                    </td>
+                                    <td class="pe-4 text-end" th:text="${i[2]}">Motivo</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- RENDIMIENTO POR EMPLEADO -->
+                <div class="card card-pubrock p-0">
+                    <div class="card-header bg-transparent border-bottom border-secondary border-opacity-25 p-3">
+                        <h5 class="mb-0">Rendimiento por Empleado</h5>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0 align-middle">
+                            <thead class="oswald-font" style="background-color: rgba(0,0,0,0.2);">
+                                <tr>
+                                    <th class="ps-4 py-3 border-0">Empleado</th>
+                                    <th class="py-3 border-0 text-center">Facturación</th>
+                                    <th class="py-3 border-0 text-center">Órdenes</th>
+                                    <th class="pe-4 py-3 border-0 text-end">Incidencias</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="e : ${rendimientoEmpleados}">
+                                    <td class="ps-4 fw-bold" th:text="${e[0]}">Empleado</td>
+                                    <td class="text-center" th:text="|₡${e[1]}|">₡0.00</td>
+                                    <td class="text-center" th:text="${e[2]}">0</td>
+                                    <td class="pe-4 text-end" th:text="${e[3]}">0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL GENERAR REPORTE -->
+    <div class="modal fade" id="modalGenerarReporte" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #3E2723;">
+                    <h5 class="modal-title">Generar Reporte</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-2">Se generará el reporte con los filtros seleccionados.</p>
+
+                    <label class="form-label">Tipo de reporte</label>
+                    <input type="text" class="form-control mb-2" value="Ventas Diarias" readonly>
+
+                    <label class="form-label">Estado</label>
+                    <input type="text" class="form-control" value="Previsualización lista" readonly>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-pubrock">Aceptar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EXPORTAR PDF -->
+    <div class="modal fade" id="modalExportarPDF" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #DC3545;">
+                    <h5 class="modal-title">Exportar Reporte PDF</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-2">¿Desea exportar el reporte actual en formato PDF?</p>
+
+                    <label class="form-label">Nombre del archivo</label>
+                    <input type="text" class="form-control mb-2" value="reporte_pubrock.pdf">
+
+                    <label class="form-label">Formato</label>
+                    <input type="text" class="form-control" value="PDF" readonly>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger">Descargar PDF</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+
+</body>
+</html>

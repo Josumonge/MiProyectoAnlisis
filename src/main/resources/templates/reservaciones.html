@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{layout :: head}"></th:block>
+    <title>Reservaciones - PubRock</title>
+</head>
+<body>
+
+    <div th:replace="~{layout :: topbar}"></div>
+
+    <div class="layout d-flex">
+        <div th:replace="~{layout :: sidebar}"></div>
+
+        <main class="main-content">
+            <div class="container-fluid">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="display-6 fw-bold">Gestión de Reservaciones</h2>
+                        <p class="text-muted small text-uppercase">Registro, consulta y cancelación de reservaciones</p>
+                    </div>
+
+                    <button class="btn btn-pubrock px-4 py-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalAgregarReserva">
+                        <i class="bi bi-plus-circle me-2"></i>Crear Reserva
+                    </button>
+                </div>
+
+                <!-- FILTROS -->
+                <div class="card card-pubrock mb-4">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-5">
+                                <label class="form-label">Filtrar por fecha</label>
+                                <input type="date" class="form-control">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Filtrar por estado</label>
+                                <select class="form-select">
+                                    <option value="">Todos</option>
+                                    <option value="true">Confirmada</option>
+                                    <option value="false">Cancelada</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2 d-grid">
+                                <button class="btn btn-outline-light">
+                                    <i class="bi bi-search me-1"></i>Consultar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLA -->
+                <div class="card card-pubrock p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0 align-middle">
+                            <thead class="oswald-font" style="background-color: rgba(0,0,0,0.2);">
+                                <tr>
+                                    <th class="ps-4 py-3 border-0">Reservación</th>
+                                    <th class="py-3 border-0">Cliente</th>
+                                    <th class="py-3 border-0 text-center">Fecha</th>
+                                    <th class="py-3 border-0 text-center">Hora</th>
+                                    <th class="py-3 border-0 text-center">Personas</th>
+                                    <th class="py-3 border-0 text-center">Estado</th>
+                                    <th class="pe-4 py-3 border-0 text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="r : ${reservas}">
+                                    <td class="ps-4 fw-bold" th:text="${r[0]}">RES-001</td>
+                                    <td>
+                                        <div class="fw-bold text-acento" th:text="${r[1]}">Cliente</div>
+                                        <small class="text-muted" th:text="${r[3]}">correo@gmail.com</small>
+                                    </td>
+                                    <td class="text-center" th:text="${r[4]}">2026-04-10</td>
+                                    <td class="text-center" th:text="${r[5]}">19:00</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-dark border border-secondary px-3"
+                                              th:text="${r[6] + ' pers.'}">
+                                            4 pers.
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span th:if="${r[7] == true}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#82E0AA; color:#121212;">
+                                            Confirmada
+                                        </span>
+
+                                        <span th:if="${r[7] == false}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#DC3545; color:white;">
+                                            Cancelada
+                                        </span>
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        <div class="btn-group btn-group-sm">
+                                            <button class="btn btn-outline-light border-0"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalEditarReserva"
+                                                    th:attr="
+                                                        data-bs-id=${r[0]},
+                                                        data-bs-nombre=${r[1]},
+                                                        data-bs-telefono=${r[2]},
+                                                        data-bs-correo=${r[3]},
+                                                        data-bs-fecha=${r[4]},
+                                                        data-bs-hora=${r[5]},
+                                                        data-bs-personas=${r[6]},
+                                                        data-bs-estado=${r[7]}">
+                                                <i class="bi bi-pencil"></i>
+                                            </button>
+
+                                            <button class="btn btn-outline-danger border-0"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalCancelarReserva"
+                                                    th:attr="
+                                                        data-bs-id=${r[0]},
+                                                        data-bs-nombre=${r[1]},
+                                                        data-bs-estado=${r[7]}">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${#lists.isEmpty(reservas)}">
+                                    <td colspan="7" class="text-center py-5 text-muted italic">
+                                        <i class="bi bi-calendar-x d-block fs-1 mb-2 opacity-25"></i>
+                                        No hay reservaciones registradas.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- RESUMEN -->
+                <div class="row mt-4 g-3">
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Total Reservaciones</small>
+                            <h3 class="mb-0 oswald-font" th:text="${reservas.length}">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Confirmadas</small>
+                            <h3 class="mb-0 oswald-font">2</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Canceladas</small>
+                            <h3 class="mb-0 oswald-font">1</h3>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL AGREGAR -->
+    <div class="modal fade" id="modalAgregarReserva" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #3E2723;">
+                    <h5 class="modal-title">Registrar Reservación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control mb-2" placeholder="Ingrese el nombre">
+
+                    <label class="form-label">Teléfono</label>
+                    <input type="number" class="form-control mb-2" placeholder="Ingrese el teléfono">
+
+                    <label class="form-label">Correo</label>
+                    <input type="email" class="form-control mb-2" placeholder="Ingrese el correo">
+
+                    <label class="form-label">Fecha</label>
+                    <input type="date" class="form-control mb-2">
+
+                    <label class="form-label">Hora</label>
+                    <input type="time" class="form-control mb-2">
+
+                    <label class="form-label">Cantidad de personas</label>
+                    <input type="number" class="form-control mb-2" placeholder="Ingrese la cantidad">
+
+                    <label class="form-label">Estado</label>
+                    <select class="form-select">
+                        <option value="true">Confirmada</option>
+                        <option value="false">Cancelada</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-pubrock">Guardar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR -->
+    <div class="modal fade" id="modalEditarReserva" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-dark" style="background-color: #EA9999;">
+                    <h5 class="modal-title">Editar Reservación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Número de reservación</label>
+                    <input type="text" id="editarReservaId" class="form-control mb-2" readonly>
+
+                    <label class="form-label">Nombre</label>
+                    <input type="text" id="editarReservaNombre" class="form-control mb-2">
+
+                    <label class="form-label">Teléfono</label>
+                    <input type="number" id="editarReservaTelefono" class="form-control mb-2">
+
+                    <label class="form-label">Correo</label>
+                    <input type="email" id="editarReservaCorreo" class="form-control mb-2">
+
+                    <label class="form-label">Fecha</label>
+                    <input type="date" id="editarReservaFecha" class="form-control mb-2">
+
+                    <label class="form-label">Hora</label>
+                    <input type="time" id="editarReservaHora" class="form-control mb-2">
+
+                    <label class="form-label">Cantidad de personas</label>
+                    <input type="number" id="editarReservaPersonas" class="form-control mb-2">
+
+                    <label class="form-label">Estado</label>
+                    <select id="editarReservaEstado" class="form-select">
+                        <option value="true">Confirmada</option>
+                        <option value="false">Cancelada</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success">Guardar cambios</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CANCELAR -->
+    <div class="modal fade" id="modalCancelarReserva" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #DC3545;">
+                    <h5 class="modal-title">Cancelar Reservación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Número de reservación</label>
+                    <input type="text" id="cancelarReservaId" class="form-control mb-2" readonly>
+
+                    <label class="form-label">Cliente</label>
+                    <input type="text" id="cancelarReservaNombre" class="form-control mb-2" readonly>
+
+                    <label class="form-label">Estado actual</label>
+                    <input type="text" id="cancelarReservaEstado" class="form-control" readonly>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Volver</button>
+                    <button class="btn btn-danger">Cancelar Reservación</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const modalEditar = document.getElementById('modalEditarReserva');
+            if (modalEditar) {
+                modalEditar.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+
+                    const id = button.getAttribute('data-bs-id');
+                    const nombre = button.getAttribute('data-bs-nombre');
+                    const telefono = button.getAttribute('data-bs-telefono');
+                    const correo = button.getAttribute('data-bs-correo');
+                    const fecha = button.getAttribute('data-bs-fecha');
+                    const hora = button.getAttribute('data-bs-hora');
+                    const personas = button.getAttribute('data-bs-personas');
+                    const estado = button.getAttribute('data-bs-estado');
+
+                    document.getElementById('editarReservaId').value = id || '';
+                    document.getElementById('editarReservaNombre').value = nombre || '';
+                    document.getElementById('editarReservaTelefono').value = telefono || '';
+                    document.getElementById('editarReservaCorreo').value = correo || '';
+                    document.getElementById('editarReservaFecha').value = fecha || '';
+                    document.getElementById('editarReservaHora').value = hora || '';
+                    document.getElementById('editarReservaPersonas').value = personas || '';
+                    document.getElementById('editarReservaEstado').value = estado || 'true';
+                });
+            }
+
+            const modalCancelar = document.getElementById('modalCancelarReserva');
+            if (modalCancelar) {
+                modalCancelar.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+
+                    const id = button.getAttribute('data-bs-id');
+                    const nombre = button.getAttribute('data-bs-nombre');
+                    const estado = button.getAttribute('data-bs-estado');
+
+                    document.getElementById('cancelarReservaId').value = id || '';
+                    document.getElementById('cancelarReservaNombre').value = nombre || '';
+                    document.getElementById('cancelarReservaEstado').value = (estado === 'true') ? 'Confirmada' : 'Cancelada';
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>

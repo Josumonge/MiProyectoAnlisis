@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{layout :: head}"></th:block>
+    <title>Inventario - PubRock</title>
+</head>
+<body>
+
+    <div th:replace="~{layout :: topbar}"></div>
+
+    <div class="layout d-flex">
+        <div th:replace="~{layout :: sidebar}"></div>
+
+        <main class="main-content">
+            <div class="container-fluid">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="display-6 fw-bold">Gestión de Inventario</h2>
+                        <p class="text-muted small text-uppercase">Control de productos, stock y proveedores</p>
+                    </div>
+
+                    <button class="btn btn-pubrock px-4 py-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalAgregarProducto">
+                        <i class="bi bi-plus-lg me-2"></i>Agregar Producto
+                    </button>
+                </div>
+
+                <!-- BUSCADOR -->
+                <div class="card card-pubrock mb-4">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-10">
+                                <label class="form-label">Buscar producto</label>
+                                <input type="text"
+                                       class="form-control"
+                                       placeholder="Ingrese nombre o código del producto">
+                            </div>
+                            <div class="col-md-2 d-grid">
+                                <button class="btn btn-outline-light">
+                                    <i class="bi bi-search me-1"></i>Buscar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLA -->
+                <div class="card card-pubrock p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0 align-middle">
+                            <thead class="oswald-font" style="background-color: rgba(0,0,0,0.3);">
+                                <tr>
+                                    <th class="ps-4 py-3 border-0">ID</th>
+                                    <th class="py-3 border-0">Código</th>
+                                    <th class="py-3 border-0">Producto</th>
+                                    <th class="py-3 border-0">Proveedor</th>
+                                    <th class="py-3 border-0 text-center">Precio</th>
+                                    <th class="py-3 border-0 text-center">Stock</th>
+                                    <th class="pe-4 py-3 border-0 text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p : ${productos}">
+                                    <td class="ps-4 text-muted" th:text="${p[0]}">1</td>
+                                    <td th:text="${p[1]}">P001</td>
+                                    <td class="fw-bold" th:text="${p[2]}">Hamburguesa</td>
+                                    <td th:text="${p[5]}">Proveedor</td>
+                                    <td class="text-center" th:text="'₡' + ${p[3]}">₡3500</td>
+
+                                    <td class="text-center">
+                                        <span th:if="${p[4] <= 5}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#DC3545; color:white;">
+                                            <span th:text="${p[4]} + ' - STOCK BAJO'">2 - STOCK BAJO</span>
+                                        </span>
+
+                                        <span th:if="${p[4] > 5 and p[4] <= 10}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#FFC107; color:#121212;">
+                                            <span th:text="${p[4]} + ' unidades'">8 unidades</span>
+                                        </span>
+
+                                        <span th:if="${p[4] > 10}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#82E0AA; color:#121212;">
+                                            <span th:text="${p[4]} + ' unidades'">15 unidades</span>
+                                        </span>
+                                    </td>
+
+                                    <td class="pe-4 text-end">
+                                        <button class="btn btn-sm btn-outline-light border-0 me-1"
+                                                title="Editar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEditarProducto"
+                                                th:attr="
+                                                    data-bs-id=${p[0]},
+                                                    data-bs-codigo=${p[1]},
+                                                    data-bs-nombre=${p[2]},
+                                                    data-bs-precio=${p[3]},
+                                                    data-bs-cantidad=${p[4]},
+                                                    data-bs-proveedor=${p[5]}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+
+                                        <button class="btn btn-sm btn-outline-danger border-0"
+                                                title="Eliminar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEliminarProducto"
+                                                th:attr="
+                                                    data-bs-id=${p[0]},
+                                                    data-bs-nombre=${p[2]}">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${#lists.isEmpty(productos)}">
+                                    <td colspan="7" class="text-center py-5">
+                                        <p class="text-muted mb-0">No hay productos registrados en el inventario.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TARJETAS RESUMEN -->
+                <div class="row mt-4 g-3">
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Total Productos</small>
+                            <h3 class="mb-0 oswald-font" th:text="${productos.length}">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Stock Bajo</small>
+                            <h3 class="mb-0 oswald-font">2</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Estado del Inventario</small>
+                            <h3 class="mb-0 oswald-font">Activo</h3>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL AGREGAR -->
+    <div class="modal fade" id="modalAgregarProducto" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #3E2723;">
+                    <h5 class="modal-title">Agregar Producto</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-control mb-2" placeholder="Ingrese el nombre del producto">
+
+                    <label class="form-label">Código</label>
+                    <input type="text" class="form-control mb-2" placeholder="Ingrese el código">
+
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" class="form-control mb-2" placeholder="Ingrese la cantidad">
+
+                    <label class="form-label">Precio</label>
+                    <input type="number" step="0.01" class="form-control mb-2" placeholder="Ingrese el precio">
+
+                    <label class="form-label">Proveedor</label>
+                    <input type="text" class="form-control" placeholder="Ingrese el proveedor">
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-pubrock">Guardar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR -->
+    <div class="modal fade" id="modalEditarProducto" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-dark" style="background-color: #EA9999;">
+                    <h5 class="modal-title">Editar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" id="editarIdProducto">
+
+                    <label class="form-label">Nombre</label>
+                    <input type="text" id="editarNombreProducto" class="form-control mb-2">
+
+                    <label class="form-label">Código</label>
+                    <input type="text" id="editarCodigoProducto" class="form-control mb-2">
+
+                    <label class="form-label">Cantidad</label>
+                    <input type="number" id="editarCantidadProducto" class="form-control mb-2">
+
+                    <label class="form-label">Precio</label>
+                    <input type="number" step="0.01" id="editarPrecioProducto" class="form-control mb-2">
+
+                    <label class="form-label">Proveedor</label>
+                    <input type="text" id="editarProveedorProducto" class="form-control">
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success">Guardar cambios</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ELIMINAR -->
+    <div class="modal fade" id="modalEliminarProducto" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #DC3545;">
+                    <h5 class="modal-title">Eliminar Producto</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-2">¿Desea eliminar el siguiente producto?</p>
+
+                    <input type="hidden" id="eliminarIdProducto">
+
+                    <label class="form-label">Producto seleccionado</label>
+                    <input type="text" id="eliminarNombreProducto" class="form-control" readonly>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger">Eliminar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const modalEditar = document.getElementById('modalEditarProducto');
+            if (modalEditar) {
+                modalEditar.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+
+                    const id = button.getAttribute('data-bs-id');
+                    const codigo = button.getAttribute('data-bs-codigo');
+                    const nombre = button.getAttribute('data-bs-nombre');
+                    const precio = button.getAttribute('data-bs-precio');
+                    const cantidad = button.getAttribute('data-bs-cantidad');
+                    const proveedor = button.getAttribute('data-bs-proveedor');
+
+                    document.getElementById('editarIdProducto').value = id || '';
+                    document.getElementById('editarCodigoProducto').value = codigo || '';
+                    document.getElementById('editarNombreProducto').value = nombre || '';
+                    document.getElementById('editarPrecioProducto').value = precio || '';
+                    document.getElementById('editarCantidadProducto').value = cantidad || '';
+                    document.getElementById('editarProveedorProducto').value = proveedor || '';
+                });
+            }
+
+            const modalEliminar = document.getElementById('modalEliminarProducto');
+            if (modalEliminar) {
+                modalEliminar.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+
+                    const id = button.getAttribute('data-bs-id');
+                    const nombre = button.getAttribute('data-bs-nombre');
+
+                    document.getElementById('eliminarIdProducto').value = id || '';
+                    document.getElementById('eliminarNombreProducto').value = nombre || '';
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{layout :: head}"></th:block>
+    <title>Login - PubRock</title>
+</head>
+
+<body class="login-body">
+
+    <div class="container login-container">
+
+        <div class="card card-pubrock shadow-lg p-4 login-card">
+
+            <div class="text-center mb-4">
+                <img th:src="@{/img/logo.jpeg}" width="70" class="rounded-circle mb-3">
+                <h2 class="fw-bold">PUBROCK</h2>
+                <p class="text-muted small">Sistema de Gestión</p>
+            </div>
+
+            <div class="alert alert-danger d-none" id="alertaLogin">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Credenciales incorrectas (simulado)
+            </div>
+
+            <form>
+
+                <div class="mb-3">
+                    <label class="form-label">Usuario / Correo</label>
+                    <input type="text" class="form-control bg-dark text-white border-secondary"
+                           placeholder="Ingrese su usuario">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control bg-dark text-white border-secondary"
+                           placeholder="Ingrese su contraseña">
+                </div>
+
+                <div class="d-grid mb-3">
+                    <a th:href="@{/}" class="btn btn-pubrock btn-lg">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+                    </a>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">¿Olvidaste tu contraseña?</small>
+
+                    <button type="button" class="btn btn-sm btn-outline-light"
+                            onclick="mostrarErrorLogin()">
+                        Simular error
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+
+    <script>
+        function mostrarErrorLogin() {
+            document.getElementById("alertaLogin").classList.remove("d-none");
+        }
+    </script>
+
+</body>
+</html>

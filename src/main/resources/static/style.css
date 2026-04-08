@@ -1,0 +1,520 @@
+.login-body {
+    min-height: 100vh;
+    background: linear-gradient(rgba(18,18,18,0.88), rgba(18,18,18,0.92)),
+                url('/img/logo.jpeg') center/cover no-repeat;
+}
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card {
+    max-width: 430px;
+    width: 100%;
+    border-radius: 18px;
+}
+
+.login-card h2 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.login-card label {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--terciario);
+}
+
+.login-card input {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+}
+
+.login-card p,
+.login-card small {
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+/* Paleta de Colores PubRock */
+:root {
+    --primario: #3E2723;
+    --secundario: #121212;
+    --terciario: #F5E0C3;
+    --acento: #EA9999;
+    --blanco-suave: #ffffff;
+    --exito: #82E0AA;
+    --alerta: #F8C471;
+    --error: #DC3545;
+
+    --texto-principal: #F5E0C3;
+    --texto-secundario: rgba(245, 224, 195, 0.82);
+    --texto-suave: rgba(245, 224, 195, 0.68);
+    --borde-suave: rgba(245, 224, 195, 0.12);
+    --fondo-input: #1b1b1b;
+}
+
+body {
+    background-color: var(--secundario);
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--texto-principal);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Títulos con Oswald */
+h1, h2, h3, .nav-section-title, .oswald-font {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--texto-principal);
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+h3, .titulo-secundario {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+p, span, td, th, label, input, select, textarea, small {
+    font-family: 'Open Sans', sans-serif;
+}
+
+p, td, label, input, select, textarea {
+    font-size: 14px;
+}
+
+small,
+.text-muted {
+    color: var(--texto-secundario) !important;
+}
+
+/* NAVBAR SUPERIOR */
+.navbar-custom {
+    background-color: var(--primario);
+    border-bottom: 2px solid var(--acento);
+    height: 65px;
+}
+
+.navbar-brand {
+    font-family: 'Oswald', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--acento) !important;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    background-color: var(--primario);
+    min-height: calc(100vh - 65px);
+    padding: 20px 0;
+    position: fixed;
+}
+
+.nav-section-title {
+    font-size: 14px;
+    color: var(--acento);
+    padding: 10px 25px;
+    margin-top: 15px;
+    opacity: 0.8;
+}
+
+.nav-link-custom {
+    color: var(--terciario);
+    padding: 12px 25px;
+    display: block;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.nav-link-custom:hover {
+    background-color: var(--acento);
+    color: var(--secundario);
+    padding-left: 35px;
+}
+
+/* CONTENIDO PRINCIPAL */
+.main-content {
+    margin-left: 260px;
+    padding: 40px;
+    width: calc(100% - 260px);
+}
+
+/* TARJETAS Y TABLAS ESTILO BOOTSTRAP PERSONALIZADO */
+.card-pubrock {
+    background-color: var(--primario);
+    border: 1px solid rgba(245, 224, 195, 0.1);
+    border-radius: 10px;
+    color: var(--terciario);
+}
+
+.table {
+    color: var(--terciario);
+    border-color: #5d4037;
+}
+
+.table thead th {
+    background-color: #2b1b18;
+    color: var(--acento);
+    border-bottom: 2px solid var(--acento);
+    font-family: 'Oswald', sans-serif;
+}
+
+/* BOTONES */
+.btn-pubrock {
+    background-color: var(--acento);
+    color: var(--secundario);
+    font-weight: 700;
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-pubrock:hover {
+    background-color: var(--terciario);
+    transform: translateY(-2px);
+}
+/* Paleta de Colores PubRock */
+:root {
+    --primario: #3E2723;
+    --secundario: #121212;
+    --terciario: #F5E0C3;
+    --acento: #EA9999;
+    --exito: #82E0AA;
+    --alerta: #F8C471;
+}
+
+body {
+    background-color: var(--secundario);
+    font-family: 'Open Sans', sans-serif;
+    color: var(--terciario);
+}
+
+h1, h2, h3, .nav-section-title {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+}
+
+/* NAVBAR */
+.navbar-custom {
+    background-color: var(--primario);
+    border-bottom: 2px solid var(--acento);
+    padding: 0.5rem 2rem;
+}
+
+.navbar-brand {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    color: var(--acento) !important;
+    letter-spacing: 2px;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 260px;
+    background-color: var(--primario);
+    min-height: calc(100vh - 65px);
+    position: fixed;
+    border-right: 1px solid rgba(234, 153, 153, 0.2);
+}
+
+.nav-section-title {
+    font-size: 0.75rem;
+    color: var(--acento);
+    padding: 1.5rem 1.5rem 0.5rem;
+    letter-spacing: 1px;
+    opacity: 0.7;
+}
+
+.nav-link-custom {
+    color: var(--terciario);
+    padding: 0.8rem 1.5rem;
+    display: block;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.nav-link-custom:hover {
+    background-color: var(--acento);
+    color: var(--secundario);
+    padding-left: 2rem;
+}
+
+/* MAIN CONTENT */
+.main-content {
+    margin-left: 260px;
+    padding: 2rem;
+    width: calc(100% - 260px);
+}
+
+/* DASHBOARD CARDS */
+.card-stat {
+    background: linear-gradient(145deg, #3E2723, #2b1b18);
+    border: none;
+    border-radius: 15px;
+    color: var(--terciario);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.card-stat:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(234, 153, 153, 0.2);
+}
+
+.card-stat h2 {
+    font-size: 2.5rem;
+    margin-bottom: 0;
+    color: var(--acento);
+}
+
+.card-stat p {
+    font-weight: 600;
+    opacity: 0.8;
+    margin-bottom: 0;
+}
+
+.icon-box {
+    background-color: rgba(234, 153, 153, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    color: var(--acento);
+}
+
+.card-resumen {
+    background: linear-gradient(145deg, #3E2723, #2b1b18);
+    border-left: 5px solid var(--acento);
+    border-radius: 10px;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+.card-resumen h3 {
+    font-size: 1rem;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
+
+.card-resumen .monto {
+    font-size: 1.8rem;
+    font-weight: 700;
+    font-family: 'Oswald', sans-serif;
+}
+/* Estilo para los botones de la tabla */
+.btn-outline-warning {
+    color: #F5E0C3;
+    border-color: #f1c40f;
+}
+.btn-outline-warning:hover {
+    background-color: #f1c40f;
+    color: #121212;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(234, 153, 153, 0.1); /* Un toque sutil del color acento al pasar el mouse */
+    transition: 0.2s;
+}
+
+.badge {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+}
+/* =========================================
+   ESTILOS ESPECÍFICOS PARA PUNTO DE VENTA (POS)
+   ========================================= */
+
+/* Contenedor de botones de productos */
+.pos-grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 15px;
+    padding: 10px 0;
+}
+
+/* Botón de Producto Estilo Touch */
+.producto-btn {
+    background: linear-gradient(145deg, #4e342e, #3e2723); /* Un poco más claro que el fondo para resaltar */
+    border: 1px solid rgba(245, 224, 195, 0.05);
+    border-radius: 12px;
+    color: var(--terciario);
+    padding: 20px 10px;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.producto-btn:hover {
+    transform: translateY(-5px);
+    background: var(--acento);
+    color: var(--secundario) !important;
+    box-shadow: 0 8px 15px rgba(234, 153, 153, 0.3);
+}
+
+.producto-btn i {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    color: var(--acento);
+    transition: color 0.3s;
+}
+
+.producto-btn:hover i {
+    color: var(--secundario);
+}
+
+.producto-btn .precio-tag {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    opacity: 0.8;
+}
+
+/* Panel del Ticket (Carrito) */
+.ticket-container {
+    border-left: 4px solid var(--acento);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ticket-scroll {
+    max-height: 450px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Personalización de la tabla dentro del Ticket */
+.table-ticket {
+    color: var(--terciario);
+    font-size: 0.95rem;
+}
+
+.table-ticket tbody tr {
+    border-bottom: 1px dashed rgba(245, 224, 195, 0.1);
+}
+
+.table-ticket td {
+    padding: 12px 5px;
+}
+
+/* Totalizador */
+.total-section {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 15px 15px;
+    padding: 20px;
+    margin-top: auto;
+}
+
+.total-monto {
+    color: var(--acento);
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+/* Auxiliares */
+.text-acento {
+    color: var(--acento) !important;
+}
+
+/* Scrollbar para el área de productos y ticket */
+.ticket-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.ticket-scroll::-webkit-scrollbar-thumb {
+    background: var(--acento);
+    border-radius: 10px;
+}
+
+.ticket-scroll::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+}
+.btn-report-card {
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-report-card .card-stat:hover {
+    border: 1px solid var(--acento);
+    cursor: pointer;
+}
+
+.text-acento {
+    color: var(--acento) !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Hace que el icono del calendario sea blanco */
+}
+.table-dark {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--terciario);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(234, 153, 153, 0.05) !important;
+    transition: 0.3s;
+}
+
+.text-acento {
+    color: var(--acento) !important;
+}
+
+.card-pubrock {
+    border: 1px solid rgba(245, 224, 195, 0.1);
+    overflow: hidden;
+}
+/* Estilos específicos para esta vista */
+.avatar-circle {
+    width: 35px;
+    height: 35px;
+    background-color: var(--acento);
+    color: var(--secundario);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-family: 'Oswald', sans-serif;
+}
+
+.bg-outline-acento {
+    border: 1px solid var(--acento);
+    color: var(--acento);
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(234, 153, 153, 0.05) !important;
+}
+
+.card-pubrock {
+    border: 1px solid rgba(245, 224, 195, 0.1);
+    overflow: hidden;
+}

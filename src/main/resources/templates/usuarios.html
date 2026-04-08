@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{layout :: head}"></th:block>
+    <title>Usuarios - PubRock</title>
+</head>
+<body>
+
+<div th:replace="~{layout :: topbar}"></div>
+
+<div class="layout d-flex">
+    <div th:replace="~{layout :: sidebar}"></div>
+
+    <main class="main-content">
+        <div class="container-fluid">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="display-6 fw-bold">Gestión de Usuarios</h2>
+                    <p class="text-muted small text-uppercase">Control de acceso y roles del personal</p>
+                </div>
+
+                <button class="btn btn-pubrock px-4 py-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalAgregarUsuario">
+                    <i class="bi bi-person-plus-fill me-2"></i>Nuevo Usuario
+                </button>
+            </div>
+
+            <div class="alert alert-success alert-dismissible fade show d-none"
+                 id="alertaUsuario" role="alert">
+                ✔ Acción realizada correctamente (simulada)
+                <button type="button" class="btn-close"
+                        onclick="this.parentElement.classList.add('d-none');"></button>
+            </div>
+
+            <div class="card card-pubrock p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-dark mb-0 align-middle">
+                        <thead class="oswald-font" style="background-color: rgba(0,0,0,0.3);">
+                        <tr>
+                            <th class="ps-4 py-3 border-0">Nombre Completo</th>
+                            <th class="py-3 border-0">Nombre de Usuario</th>
+                            <th class="py-3 border-0 text-center">Rol / Perfil</th>
+                            <th class="py-3 border-0 text-center">Estado</th>
+                            <th class="pe-4 py-3 border-0 text-end">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="u : ${usuarios}">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-3"
+                                         th:text="${#strings.substring(u[0],0,1)}">U</div>
+                                    <span class="fw-bold" th:text="${u[0]}">Nombre</span>
+                                </div>
+                            </td>
+
+                            <td class="text-muted" th:text="${u[1]}">username</td>
+
+                            <td class="text-center">
+                                <span class="badge bg-outline-acento px-3" th:text="${u[2]}">ADMIN</span>
+                            </td>
+
+                            <td class="text-center">
+                                <span th:if="${u[3] == 'Activo'}"
+                                      class="badge rounded-pill px-3"
+                                      style="background-color:#82E0AA; color:#121212;">
+                                    Activo
+                                </span>
+
+                                <span th:if="${u[3] == 'Inactivo'}"
+                                      class="badge rounded-pill px-3"
+                                      style="background-color:#DC3545; color:white;">
+                                    Inactivo
+                                </span>
+                            </td>
+
+                            <td class="pe-4 text-end">
+                                <button class="btn btn-sm btn-outline-light border-0 me-1"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalEditarUsuario"
+                                        th:attr="
+                                            data-bs-nombre=${u[0]},
+                                            data-bs-username=${u[1]},
+                                            data-bs-rol=${u[2]},
+                                            data-bs-estado=${u[3]},
+                                            data-bs-apellidos='Picado',
+                                            data-bs-correo=${u[1] + '@pubrock.com'},
+                                            data-bs-telefono='88887777',
+                                            data-bs-cedula='123456789'">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+
+                                <button class="btn btn-sm btn-outline-danger border-0"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#modalInactivarUsuario"
+                                        th:attr="data-bs-username=${u[1]}">
+                                    <i class="bi bi-person-x"></i>
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(usuarios)}">
+                            <td colspan="5" class="text-center py-5">
+                                <p class="text-muted mb-0">No se encontraron usuarios registrados.</p>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- MODAL AGREGAR -->
+<div class="modal fade" id="modalAgregarUsuario">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-white" style="background-color: #3E2723;">
+                <h5 class="modal-title">Agregar Usuario</h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control mb-2" placeholder="Nombre">
+
+                <label class="form-label">Apellidos</label>
+                <input type="text" class="form-control mb-2" placeholder="Apellidos">
+
+                <label class="form-label">Correo</label>
+                <input type="email" class="form-control mb-2" placeholder="Correo">
+
+                <label class="form-label">Contraseña</label>
+                <input type="password" class="form-control mb-2" placeholder="Contraseña">
+
+                <label class="form-label">Teléfono</label>
+                <input type="number" class="form-control mb-2" placeholder="Teléfono">
+
+                <label class="form-label">Cédula</label>
+                <input type="number" class="form-control mb-2" placeholder="Cédula">
+
+                <label class="form-label">Estado</label>
+                <select class="form-select mb-2">
+                    <option>Activo</option>
+                    <option>Inactivo</option>
+                </select>
+
+                <label class="form-label">Rol</label>
+                <select class="form-select">
+                    <option>Administrador</option>
+                    <option>Empleado</option>
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-pubrock"
+                        onclick="mostrarAlertaUsuario('✔ Usuario agregado correctamente')">
+                    Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDITAR -->
+<div class="modal fade" id="modalEditarUsuario">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#EA9999;">
+                <h5 class="modal-title">Editar Usuario</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <label class="form-label">Nombre</label>
+                <input type="text" id="editarNombre" class="form-control mb-2">
+
+                <label class="form-label">Apellidos</label>
+                <input type="text" id="editarApellidos" class="form-control mb-2">
+
+                <label class="form-label">Correo</label>
+                <input type="email" id="editarCorreo" class="form-control mb-2">
+
+                <label class="form-label">Contraseña</label>
+                <input type="password" id="editarContrasena" class="form-control mb-2" placeholder="Nueva contraseña">
+
+                <label class="form-label">Número de teléfono</label>
+                <input type="number" id="editarTelefono" class="form-control mb-2">
+
+                <label class="form-label">Cédula</label>
+                <input type="number" id="editarCedula" class="form-control mb-2">
+
+                <label class="form-label">Nombre de usuario</label>
+                <input type="text" id="editarUsername" class="form-control mb-2">
+
+                <label class="form-label">Estado</label>
+                <select id="editarEstado" class="form-select mb-2">
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+
+                <label class="form-label">Rol</label>
+                <select id="editarRol" class="form-select">
+                    <option value="Administrador">Administrador</option>
+                    <option value="Empleado">Empleado</option>
+                </select>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success"
+                        onclick="mostrarAlertaUsuario('✔ Usuario actualizado correctamente')">
+                    Guardar cambios
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL INACTIVAR -->
+<div class="modal fade" id="modalInactivarUsuario">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-white" style="background:#DC3545;">
+                <h5 class="modal-title">Inactivar Usuario</h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <label class="form-label">Cédula o correo asociado</label>
+                <input type="text" id="inactivarUsuarioDato" class="form-control" readonly>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger"
+                        onclick="mostrarAlertaUsuario('✔ Usuario inactivado correctamente')">
+                    Inactivar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout :: scripts}"></div>
+
+<script>
+function mostrarAlertaUsuario(mensaje) {
+    const alerta = document.getElementById("alertaUsuario");
+
+    alerta.innerHTML = mensaje + `
+        <button type="button" class="btn-close"
+        onclick="this.parentElement.classList.add('d-none');"></button>
+    `;
+
+    alerta.classList.remove("d-none");
+
+    setTimeout(() => {
+        alerta.classList.add("d-none");
+    }, 3000);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const modalEditar = document.getElementById('modalEditarUsuario');
+    modalEditar.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+
+        document.getElementById('editarNombre').value = button.getAttribute('data-bs-nombre') || '';
+        document.getElementById('editarApellidos').value = button.getAttribute('data-bs-apellidos') || '';
+        document.getElementById('editarCorreo').value = button.getAttribute('data-bs-correo') || '';
+        document.getElementById('editarTelefono').value = button.getAttribute('data-bs-telefono') || '';
+        document.getElementById('editarCedula').value = button.getAttribute('data-bs-cedula') || '';
+        document.getElementById('editarUsername').value = button.getAttribute('data-bs-username') || '';
+        document.getElementById('editarEstado').value = button.getAttribute('data-bs-estado') || 'Activo';
+        document.getElementById('editarRol').value = button.getAttribute('data-bs-rol') || 'Empleado';
+        document.getElementById('editarContrasena').value = '';
+    });
+
+    const modalInactivar = document.getElementById('modalInactivarUsuario');
+    modalInactivar.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        document.getElementById('inactivarUsuarioDato').value = button.getAttribute('data-bs-username') || '';
+    });
+
+});
+</script>
+
+</body>
+</html>

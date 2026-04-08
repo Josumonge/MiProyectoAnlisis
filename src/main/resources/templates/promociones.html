@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="~{layout :: head}"></th:block>
+    <title>Promociones - PubRock</title>
+</head>
+<body>
+
+    <div th:replace="~{layout :: topbar}"></div>
+
+    <div class="layout d-flex">
+        <div th:replace="~{layout :: sidebar}"></div>
+
+        <main class="main-content">
+            <div class="container-fluid">
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="display-6 fw-bold">Ofertas & Promociones</h2>
+                        <p class="text-muted small text-uppercase">Gestión de descuentos automáticos por porcentaje</p>
+                    </div>
+
+                    <button class="btn btn-pubrock px-4 py-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalAgregarPromocion">
+                        <i class="bi bi-plus-circle-fill me-2"></i>Nueva Promoción
+                    </button>
+                </div>
+
+                <!-- BUSCADOR / FILTROS -->
+                <div class="card card-pubrock mb-4">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-5">
+                                <label class="form-label">Buscar promoción</label>
+                                <input type="text" class="form-control" placeholder="Ingrese nombre o producto">
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label">Estado</label>
+                                <select class="form-select">
+                                    <option value="">Todas</option>
+                                    <option value="true">Activas</option>
+                                    <option value="false">Inactivas</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3 d-grid">
+                                <button class="btn btn-outline-light">
+                                    <i class="bi bi-search me-1"></i>Consultar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLA -->
+                <div class="card card-pubrock p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-dark mb-0 align-middle">
+                            <thead class="oswald-font" style="background-color: rgba(0,0,0,0.3);">
+                                <tr>
+                                    <th class="ps-4 py-3 border-0">Código</th>
+                                    <th class="py-3 border-0">Promoción</th>
+                                    <th class="py-3 border-0 text-center">Porcentaje</th>
+                                    <th class="py-3 border-0 text-center">Fecha Inicio</th>
+                                    <th class="py-3 border-0 text-center">Fecha Fin</th>
+                                    <th class="py-3 border-0 text-center">Producto</th>
+                                    <th class="py-3 border-0 text-center">Estado</th>
+                                    <th class="pe-4 py-3 border-0 text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="p : ${promociones}">
+                                    <td class="ps-4 fw-bold" th:text="${p[0]}">PROM-001</td>
+                                    <td th:text="${p[1]}">Happy Hour</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-outline-acento px-3" th:text="${p[2] + '%'}">25%</span>
+                                    </td>
+                                    <td class="text-center" th:text="${p[3]}">2026-04-01</td>
+                                    <td class="text-center" th:text="${p[4]}">2026-04-30</td>
+                                    <td class="text-center">
+                                        <div class="fw-bold" th:text="${p[6]}">Producto</div>
+                                        <small class="text-muted" th:text="'ID: ' + ${p[5]}">ID: 101</small>
+                                    </td>
+                                    <td class="text-center">
+                                        <span th:if="${p[7] == true}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#82E0AA; color:#121212;">
+                                            Activa
+                                        </span>
+
+                                        <span th:if="${p[7] == false}"
+                                              class="badge rounded-pill px-3"
+                                              style="background-color:#DC3545; color:white;">
+                                            Inactiva
+                                        </span>
+                                    </td>
+                                    <td class="pe-4 text-end">
+                                        <button class="btn btn-sm btn-outline-light border-0 me-1"
+                                                title="Editar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalEditarPromocion"
+                                                th:attr="
+                                                    data-bs-codigo=${p[0]},
+                                                    data-bs-nombre=${p[1]},
+                                                    data-bs-porcentaje=${p[2]},
+                                                    data-bs-fechainicio=${p[3]},
+                                                    data-bs-fechafin=${p[4]},
+                                                    data-bs-productoid=${p[5]},
+                                                    data-bs-producto=${p[6]},
+                                                    data-bs-estado=${p[7]}">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+
+                                        <button class="btn btn-sm btn-outline-warning border-0 me-1"
+                                                title="Aplicación en venta"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalAplicacionPromocion"
+                                                th:attr="
+                                                    data-bs-promocion=${p[1]},
+                                                    data-bs-porcentaje=${p[2]},
+                                                    data-bs-producto=${p[6]},
+                                                    data-bs-estado=${p[7]}">
+                                            <i class="bi bi-tags"></i>
+                                        </button>
+
+                                        <button class="btn btn-sm btn-outline-danger border-0"
+                                                title="Desactivar"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalDesactivarPromocion"
+                                                th:attr="
+                                                    data-bs-codigo=${p[0]},
+                                                    data-bs-nombre=${p[1]}">
+                                            <i class="bi bi-pause-fill"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <tr th:if="${#lists.isEmpty(promociones)}">
+                                    <td colspan="8" class="text-center py-5">
+                                        <p class="text-muted mb-0">No hay promociones registradas.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TARJETAS RESUMEN -->
+                <div class="row mt-4 g-3">
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Total Promociones</small>
+                            <h3 class="mb-0 oswald-font" th:text="${promociones.length}">0</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Activas</small>
+                            <h3 class="mb-0 oswald-font">3</h3>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card card-stat p-3 border-0 text-center shadow-sm">
+                            <small class="text-uppercase opacity-75 fw-bold">Inactivas</small>
+                            <h3 class="mb-0 oswald-font">1</h3>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL AGREGAR -->
+    <div class="modal fade" id="modalAgregarPromocion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #3E2723;">
+                    <h5 class="modal-title">Registrar Promoción</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Nombre de la promoción</label>
+                    <input type="text" class="form-control mb-2" placeholder="Ingrese el nombre de la promoción">
+
+                    <label class="form-label">Porcentaje</label>
+                    <input type="number" class="form-control mb-2" placeholder="Ingrese el porcentaje">
+
+                    <label class="form-label">Fecha inicio</label>
+                    <input type="date" class="form-control mb-2">
+
+                    <label class="form-label">Fecha fin</label>
+                    <input type="date" class="form-control mb-2">
+
+                    <label class="form-label">Producto ID</label>
+                    <input type="number" class="form-control mb-2" placeholder="Ingrese el ID del producto">
+
+                    <label class="form-label">Producto asociado</label>
+                    <input type="text" class="form-control" placeholder="Ingrese el nombre del producto">
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-pubrock">Guardar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR -->
+    <div class="modal fade" id="modalEditarPromocion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-dark" style="background-color: #EA9999;">
+                    <h5 class="modal-title">Editar Promoción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Código</label>
+                    <input type="text" id="editarCodigoPromocion" class="form-control mb-2" readonly>
+
+                    <label class="form-label">Nombre de la promoción</label>
+                    <input type="text" id="editarNombrePromocion" class="form-control mb-2">
+
+                    <label class="form-label">Porcentaje</label>
+                    <input type="number" id="editarPorcentajePromocion" class="form-control mb-2">
+
+                    <label class="form-label">Fecha inicio</label>
+                    <input type="date" id="editarFechaInicioPromocion" class="form-control mb-2">
+
+                    <label class="form-label">Fecha fin</label>
+                    <input type="date" id="editarFechaFinPromocion" class="form-control mb-2">
+
+                    <label class="form-label">Producto ID</label>
+                    <input type="number" id="editarProductoIdPromocion" class="form-control mb-2">
+
+                    <label class="form-label">Producto asociado</label>
+                    <input type="text" id="editarProductoPromocion" class="form-control mb-2">
+
+                    <label class="form-label">Estado</label>
+                    <select id="editarEstadoPromocion" class="form-select">
+                        <option value="true">Activa</option>
+                        <option value="false">Inactiva</option>
+                    </select>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success">Guardar cambios</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL APLICACIÓN -->
+    <div class="modal fade" id="modalAplicacionPromocion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #6C757D;">
+                    <h5 class="modal-title">Aplicación Automática de Promoción</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label class="form-label">Promoción</label>
+                    <input type="text" id="aplicarNombrePromocion" class="form-control mb-2" readonly>
+
+                    <label class="form-label">Producto</label>
+                    <input type="text" id="aplicarProductoPromocion" class="form-control mb-2" readonly>
+
+                    <label class="form-label">Descuento</label>
+                    <input type="text" id="aplicarPorcentajePromocion" class="form-control mb-2" readonly>
+
+                    <label class="form-label">Estado actual</label>
+                    <input type="text" id="aplicarEstadoPromocion" class="form-control" readonly>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-warning">Aplicar en Venta</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DESACTIVAR -->
+    <div class="modal fade" id="modalDesactivarPromocion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header text-white" style="background-color: #DC3545;">
+                    <h5 class="modal-title">Desactivar Promoción</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-2">¿Desea desactivar la siguiente promoción?</p>
+
+                    <label class="form-label">Código</label>
+                    <input type="text" id="desactivarCodigoPromocion" class="form-control mb-2" readonly>
+
+                    <label class="form-label">Promoción</label>
+                    <input type="text" id="desactivarNombrePromocion" class="form-control" readonly>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger">Desactivar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{layout :: scripts}"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const modalEditar = document.getElementById('modalEditarPromocion');
+            if (modalEditar) {
+                modalEditar.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+
+                    const codigo = button.getAttribute('data-bs-codigo');
+                    const nombre = button.getAttribute('data-bs-nombre');
+                    const porcentaje = button.getAttribute('data-bs-porcentaje');
+                    const fechaInicio = button.getAttribute('data-bs-fechainicio');
+                    const fechaFin = button.getAttribute('data-bs-fechafin');
+                    const productoId = button.getAttribute('data-bs-productoid');
+                    const producto = button.getAttribute('data-bs-producto');
+                    const estado = button.getAttribute('data-bs-estado');
+
+                    document.getElementById('editarCodigoPromocion').value = codigo || '';
+                    document.getElementById('editarNombrePromocion').value = nombre || '';
+                    document.getElementById('editarPorcentajePromocion').value = porcentaje || '';
+                    document.getElementById('editarFechaInicioPromocion').value = fechaInicio || '';
+                    document.getElementById('editarFechaFinPromocion').value = fechaFin || '';
+                    document.getElementById('editarProductoIdPromocion').value = productoId || '';
+                    document.getElementById('editarProductoPromocion').value = producto || '';
+                    document.getElementById('editarEstadoPromocion').value = estado || 'true';
+                });
+            }
+
+            const modalAplicar = document.getElementById('modalAplicacionPromocion');
+            if (modalAplicar) {
+                modalAplicar.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+
+                    const promocion = button.getAttribute('data-bs-promocion');
+                    const porcentaje = button.getAttribute('data-bs-porcentaje');
+                    const producto = button.getAttribute('data-bs-producto');
+                    const estado = button.getAttribute('data-bs-estado');
+
+                    document.getElementById('aplicarNombrePromocion').value = promocion || '';
+                    document.getElementById('aplicarProductoPromocion').value = producto || '';
+                    document.getElementById('aplicarPorcentajePromocion').value = (porcentaje || '') + '%';
+                    document.getElementById('aplicarEstadoPromocion').value = (estado === 'true') ? 'Activa' : 'Inactiva';
+                });
+            }
+
+            const modalDesactivar = document.getElementById('modalDesactivarPromocion');
+            if (modalDesactivar) {
+                modalDesactivar.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+
+                    const codigo = button.getAttribute('data-bs-codigo');
+                    const nombre = button.getAttribute('data-bs-nombre');
+
+                    document.getElementById('desactivarCodigoPromocion').value = codigo || '';
+                    document.getElementById('desactivarNombrePromocion').value = nombre || '';
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>
